@@ -5,7 +5,7 @@ from typing import Dict, List, Tuple
 
 import requests
 
-DEFAULT_GEMINI_MODEL = "gemini-1.5-flash"
+DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
 DEFAULT_OLLAMA_HOST = "http://localhost:11434"
 
 SECTION_KEYS = [
