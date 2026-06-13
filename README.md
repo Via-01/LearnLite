@@ -111,7 +111,7 @@ Ollama Setup (Optional)
 
 Install Ollama and pull a model:
 
-ollama pull llama3.2
+ollama pull llama3.2 or llama3.2:1b
 
 Start Ollama and select Ollama Local AI inside LearnLite.
 
