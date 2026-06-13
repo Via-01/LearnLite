@@ -159,6 +159,12 @@ def get_ollama_models(host: str = DEFAULT_OLLAMA_HOST) -> Tuple[List[str], str]:
 
 
 def generate_with_ollama(prompt: str, model: str, host: str = DEFAULT_OLLAMA_HOST) -> Dict[str, str]:
+    if os.getenv("VERCEL"):
+        return empty_result(
+            "Ollama Local AI works when LearnLite is run locally with Ollama installed. "
+            "On cloud deployments, localhost refers to the deployment server, so use Gemini BYOK here."
+        )
+
     model = (model or "").strip()
     if not model:
         return empty_result("No Ollama model selected. Start Ollama and pull a model first, for example: ollama pull llama3.2:1b")

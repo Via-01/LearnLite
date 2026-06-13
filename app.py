@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
 
@@ -23,7 +25,15 @@ def index():
     api_key = request.form.get("api_key", "")
     user_text = request.form.get("user_text", "")
 
-    ollama_models, ollama_status = get_ollama_models()
+    # On Vercel, localhost belongs to the cloud function, not the user's laptop.
+    # So we skip Ollama probing in deployment to avoid slow failed requests.
+    running_on_vercel = bool(os.getenv("VERCEL"))
+    if running_on_vercel:
+        ollama_models = []
+        ollama_status = "Ollama local inference is available when running LearnLite locally. The deployed version supports Gemini BYOK."
+    else:
+        ollama_models, ollama_status = get_ollama_models()
+
     selected_ollama_model = request.form.get("ollama_model", "")
     if not selected_ollama_model and ollama_models:
         selected_ollama_model = ollama_models[0]
