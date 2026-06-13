@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="{{ selected_lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t['title'] }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #121614;
+            --panel: #1b211e;
+            --panel-soft: #202822;
+            --border: rgba(255,255,255,.10);
+            --text: #eef6ee;
+            --muted: #a8b5aa;
+            --accent: #b8ef8f;
+            --accent-strong: #91d764;
+        }
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(184,239,143,.14), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(184,239,143,.08), transparent 25%),
+                var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        .brand-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: .65rem;
+        }
+        .logo-dot {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent), #e8ffd6);
+            color: #172016;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            box-shadow: 0 10px 35px rgba(184,239,143,.18);
+        }
+        .text-accent { color: var(--accent); }
+        .muted { color: var(--muted); }
+        .glass-card {
+            background: rgba(27, 33, 30, .86);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            box-shadow: 0 18px 45px rgba(0,0,0,.22);
+        }
+        .form-control, .form-select {
+            background-color: var(--panel-soft);
+            border: 1px solid rgba(255,255,255,.12);
+            color: var(--text);
+            border-radius: 14px;
+        }
+        .form-control::placeholder { color: #77827a; }
+        .form-control:focus, .form-select:focus {
+            background-color: #252e27;
+            color: var(--text);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 .25rem rgba(184,239,143,.15);
+        }
+        label { color: #dce8dc; font-weight: 650; }
+        .form-text { color: var(--muted); }
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            color: #121614;
+            border: none;
+            border-radius: 14px;
+            font-weight: 800;
+        }
+        .btn-accent:hover { color: #121614; filter: brightness(.97); }
+        .pill {
+            border: 1px solid rgba(184,239,143,.22);
+            background: rgba(184,239,143,.08);
+            color: #dfffc9;
+            border-radius: 999px;
+            padding: .35rem .7rem;
+            font-size: .85rem;
+        }
+        .output-card {
+            border-left: 4px solid var(--accent);
+        }
+        .section-title {
+            display: flex;
+            gap: .55rem;
+            align-items: center;
+            color: var(--accent);
+        }
+        .section-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(184,239,143,.12);
+            color: var(--accent);
+            font-size: .85rem;
+            font-weight: 900;
+        }
+        .provider-help {
+            border: 1px dashed rgba(184,239,143,.35);
+            background: rgba(184,239,143,.06);
+            border-radius: 14px;
+        }
+        .output-content {
+            white-space: pre-line;
+            line-height: 1.75;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <header class="text-center mb-5">
+        <div class="brand-mark mb-3">
+            <span class="logo-dot">L</span>
+            <h1 class="display-5 fw-black mb-0"><span class="text-accent">Learn</span>Lite</h1>
+        </div>
+        <p class="lead muted mb-3">{{ t['subtitle'] }}</p>
+        <div class="d-flex justify-content-center gap-2 flex-wrap">
+            <span class="pill">i18n + l10n</span>
+            <span class="pill">Gemini BYOK</span>
+            <span class="pill">Ollama Local AI</span>
+        </div>
+    </header>
+
+    <div class="row g-4 align-items-start">
+        <div class="col-lg-5">
+            <div class="p-4 glass-card">
+                <form method="POST" action="/">
+                    <input type="hidden" name="action" value="explain">
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">{{ t['lang_label'] }}</label>
+                            <select name="lang" class="form-select">
+                                <option value="en" {% if selected_lang == 'en' %}selected{% endif %}>English</option>
+                                <option value="hi" {% if selected_lang == 'hi' %}selected{% endif %}>हिंदी</option>
+                                <option value="te" {% if selected_lang == 'te' %}selected{% endif %}>తెలుగు</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">{{ t['provider_label'] }}</label>
+                            <select name="provider" id="provider" class="form-select" onchange="toggleProviderFields()">
+                                <option value="gemini" {% if provider == 'gemini' %}selected{% endif %}>Gemini BYOK</option>
+                                <option value="ollama" {% if provider == 'ollama' %}selected{% endif %}>Ollama Local</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="geminiFields" class="mt-3">
+                        <label class="form-label">{{ t['gemini_key_label'] }}</label>
+                        <input type="password" name="api_key" class="form-control" placeholder="Paste Gemini API key">
+                        <div class="form-text">{{ t['gemini_key_help'] }}{% if api_key_present %} Key received for this request.{% endif %}</div>
+
+                        <label class="form-label mt-3">{{ t['gemini_model_label'] }}</label>
+                        <input type="text" name="gemini_model" class="form-control" value="{{ gemini_model }}">
+                        <div class="form-text">A model name is still required by the API. This default keeps the app simple.</div>
+                    </div>
+
+                    <div id="ollamaFields" class="mt-3">
+                        <label class="form-label">{{ t['ollama_model_label'] }}</label>
+                        {% if ollama_models %}
+                            <select name="ollama_model" class="form-select">
+                                {% for model in ollama_models %}
+                                    <option value="{{ model }}" {% if selected_ollama_model == model %}selected{% endif %}>{{ model }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">Detected from your local Ollama installation.</div>
+                        {% else %}
+                            <input type="text" name="ollama_model" class="form-control" value="{{ selected_ollama_model }}" placeholder="e.g., llama3.2:1b">
+                            <div class="form-text">{{ ollama_status }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="form-label">{{ t['input_label'] }}</label>
+                        <textarea id="userText" name="user_text" class="form-control" rows="8" placeholder="{{ t['placeholder'] }}" required oninput="updateWordCount()">{{ user_text }}</textarea>
+                        <div class="form-text"><span id="wordCount">{{ word_count }}</span>/700 words</div>
+                    </div>
+
+                    {% if error %}
+                        <div class="alert alert-warning mt-3 mb-0">{{ error }}</div>
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-accent w-100 py-3 mt-4">{{ t['submit_btn'] }}</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            {% if results %}
+                {% set sections = [
+                    ('1', t['sec_points'], results['points']),
+                    ('2', t['sec_eli15'], results['eli15']),
+                    ('3', t['sec_terms'], results['terms']),
+                    ('4', t['sec_prereq'], results['prerequisites']),
+                    ('5', t['sec_next'], results['next_topics']),
+                    ('6', t['sec_search'], results['search_suggestions'])
+                ] %}
+                <div class="d-flex flex-column gap-3">
+                    {% for num, title, content in sections %}
+                        <div class="p-4 glass-card output-card">
+                            <h5 class="section-title mb-3"><span class="section-num">{{ num }}</span>{{ title }}</h5>
+                            <div class="output-content">{{ content }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="glass-card p-5 text-center" style="min-height: 440px; display: grid; place-items: center;">
+                    <div>
+                        <div class="logo-dot mx-auto mb-3">L</div>
+                        <h4 class="text-accent">Ready to simplify</h4>
+                        <p class="muted mb-0">{{ t['empty_state'] }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script>
+    function toggleProviderFields() {
+        const provider = document.getElementById('provider').value;
+        document.getElementById('geminiFields').style.display = provider === 'gemini' ? 'block' : 'none';
+        document.getElementById('ollamaFields').style.display = provider === 'ollama' ? 'block' : 'none';
+    }
+
+    function updateWordCount() {
+        const textArea = document.getElementById('userText');
+        const countEl = document.getElementById('wordCount');
+        const words = textArea.value.trim().split(/\s+/).filter(Boolean);
+        const count = words.length;
+        countEl.textContent = count;
+        countEl.style.color = count > 700 ? '#ffb4a8' : '';
+    }
+
+    toggleProviderFields();
+    updateWordCount();
+</script>
+</body>
+</html>
