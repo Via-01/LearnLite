@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="assets/gp1.PNG" alt="LearnLite Screenshot" width="900">
-  <img src="assets/LearnLite_Main_Points.PNG" alt="LearnLite Main Points" width="900">
+  <img src="assets/LearnLite_Main_Points.png" alt="LearnLite Main Points" width="900">
 </p><p align="center">
   <b>AI-Powered Learning Assistant</b><br>
   Transform complex topics and paragraphs into beginner-friendly learning notes.
