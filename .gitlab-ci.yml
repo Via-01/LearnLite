@@ -1,0 +1,32 @@
+stages:
+  - lint
+  - security
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+
+before_script:
+  - python --version
+  - pip install --upgrade pip
+
+ruff:
+  stage: lint
+  script:
+    - pip install ruff
+    - ruff check .
+
+mypy:
+  stage: lint
+  script:
+    - pip install mypy
+    - mypy .
+
+bandit:
+  stage: security
+  script:
+    - pip install bandit
+    - bandit -r .
