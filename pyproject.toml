@@ -1,3 +1,15 @@
+[project]
+name = "learnlite"
+version = "0.1.0"
+description = "AI-powered multilingual learning assistant with Gemini and Ollama support"
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = [
+    "flask",
+    "python-dotenv"
+]
+
 [tool.ruff]
 line-length = 88
 
