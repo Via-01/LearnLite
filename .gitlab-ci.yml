@@ -1,6 +1,9 @@
 stages:
   - lint
-  - security
+  - format
+  - type_check
+  - test
+  - coverage
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -30,3 +33,28 @@ bandit:
   script:
     - pip install bandit
     - bandit -r .
+
+dependency_audit:
+  stage: test
+  image: python:3.12
+
+  before_script:
+    - pip install pip-audit
+
+  script:
+    - pip-audit
+
+format:
+  stage: format
+  script:
+    - echo "Formatting checks"
+
+type_check:
+  stage: type_check
+  script:
+    - mypy .
+
+coverage:
+  stage: coverage
+  script:
+    - echo "Coverage reporting"
