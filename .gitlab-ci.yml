@@ -13,38 +13,38 @@ cache:
     - .cache/pip
 
 before_script:
-  - python --version
-  - pip install --upgrade pip
+  - py --version
+  - python -m pip install --upgrade pip
 
 ruff:
   stage: lint
   script:
-    - pip install ruff
+    - python -m pip install ruff
     - ruff check .
 
 format:
   stage: format
   script:
-    - pip install ruff
+    - python -m pip install ruff
     - ruff format --check .
 
 mypy:
   stage: type_check
   script:
-    - pip install mypy
+    - python -m pip install mypy
     - mypy .
 
 bandit:
   stage: test
   script:
-    - pip install bandit
+    - python -m pip install bandit
     - bandit -r .
 
 dependency_audit:
   stage: test
   script:
-    - pip install pip-audit
-    - pip-audit
+    - python -m pip install pip-audit
+    - python -m pip-audit
 
 coverage:
   stage: coverage
