@@ -2,6 +2,8 @@ import json
 import os
 import re
 from typing import Dict, List, Tuple
+from typing import Any
+
 
 import requests
 
@@ -135,7 +137,7 @@ def generate_with_gemini(
 
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
     params = {"key": api_key}
-    payload = {
+    payload : Any = {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {
             "temperature": 0.2,
@@ -185,7 +187,7 @@ def generate_with_ollama(
             "No Ollama model selected. Start Ollama and pull a model first, for example: ollama pull llama3.2:1b"
         )
 
-    payload = {
+    payload : Any = {
         "model": model,
         "prompt": prompt,
         "format": "json",
