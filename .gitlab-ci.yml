@@ -11,40 +11,48 @@ variables:
 cache:
   paths:
     - .cache/pip
+    - .venv/
 
 before_script:
   - python --version
+  - python -m venv .venv
+  - source .venv/bin/activate
   - python -m pip install --upgrade pip
 
 ruff:
   stage: lint
   script:
+    - source .venv/bin/activate
     - python -m pip install ruff
     - ruff check .
 
 format:
   stage: format
   script:
+    - source .venv/bin/activate
     - python -m pip install ruff
     - ruff format --check .
 
 mypy:
   stage: type_check
   script:
+    - source .venv/bin/activate
     - python -m pip install mypy
     - mypy .
 
 bandit:
   stage: test
   script:
+    - source .venv/bin/activate
     - python -m pip install bandit
     - bandit -r .
 
 dependency_audit:
   stage: test
   script:
+    - source .venv/bin/activate
     - python -m pip install pip-audit
-    - python -m pip-audit
+    - pip-audit
 
 coverage:
   stage: coverage
