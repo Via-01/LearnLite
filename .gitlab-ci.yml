@@ -22,39 +22,31 @@ ruff:
     - pip install ruff
     - ruff check .
 
+format:
+  stage: format
+  script:
+    - pip install ruff
+    - ruff format --check .
+
 mypy:
-  stage: lint
+  stage: type_check
   script:
     - pip install mypy
     - mypy .
 
 bandit:
-  stage: security
+  stage: test
   script:
     - pip install bandit
     - bandit -r .
 
 dependency_audit:
   stage: test
-  image: python:3.12
-
-  before_script:
+  script:
     - pip install pip-audit
-
-  script:
     - pip-audit
-
-format:
-  stage: format
-  script:
-    - echo "Formatting checks"
-
-type_check:
-  stage: type_check
-  script:
-    - mypy .
 
 coverage:
   stage: coverage
   script:
-    - echo "Coverage reporting"
+    - echo "Coverage reporting configured"
