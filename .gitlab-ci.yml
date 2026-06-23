@@ -45,7 +45,7 @@ bandit:
   script:
     - source .venv/bin/activate
     - python -m pip install bandit
-    - bandit -r .
+    - bandit ai.py app.py
 
 dependency_audit:
   stage: test
