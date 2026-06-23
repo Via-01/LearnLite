@@ -80,7 +80,10 @@ def format_value(value) -> str:
                     key, val = next(iter(item.items()))
                     lines.append(f"• {key}: {format_value(val).replace(chr(10), ' ')}")
                 else:
-                    compact = "; ".join(f"{k}: {format_value(v).replace(chr(10), ' ')}" for k, v in item.items())
+                    compact = "; ".join(
+                        f"{k}: {format_value(v).replace(chr(10), ' ')}"
+                        for k, v in item.items()
+                    )
                     lines.append(f"• {compact}")
             else:
                 lines.append(f"• {str(item).strip()}")
@@ -104,7 +107,10 @@ def format_value(value) -> str:
 def parse_response(content: str) -> Dict[str, str]:
     try:
         parsed = json.loads(clean_json_text(content))
-        return {key: format_value(parsed.get(key, "No content returned.")) for key in SECTION_KEYS}
+        return {
+            key: format_value(parsed.get(key, "No content returned."))
+            for key in SECTION_KEYS
+        }
     except Exception:
         return {
             "points": "The model returned text, but not valid JSON.",
@@ -116,12 +122,16 @@ def parse_response(content: str) -> Dict[str, str]:
         }
 
 
-def generate_with_gemini(prompt: str, api_key: str, model: str = DEFAULT_GEMINI_MODEL) -> Dict[str, str]:
+def generate_with_gemini(
+    prompt: str, api_key: str, model: str = DEFAULT_GEMINI_MODEL
+) -> Dict[str, str]:
     api_key = (api_key or os.getenv("GEMINI_API_KEY", "")).strip()
     model = (model or DEFAULT_GEMINI_MODEL).strip()
 
     if not api_key:
-        return empty_result("Please paste a Gemini API key, or set GEMINI_API_KEY in your .env file.")
+        return empty_result(
+            "Please paste a Gemini API key, or set GEMINI_API_KEY in your .env file."
+        )
 
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
     params = {"key": api_key}
@@ -152,13 +162,17 @@ def get_ollama_models(host: str = DEFAULT_OLLAMA_HOST) -> Tuple[List[str], str]:
         if response.status_code != 200:
             return [], f"Ollama responded with status {response.status_code}."
         data = response.json()
-        models = [item.get("name") for item in data.get("models", []) if item.get("name")]
+        models = [
+            item.get("name") for item in data.get("models", []) if item.get("name")
+        ]
         return models, ""
     except Exception:
         return [], "Ollama is not running. Start Ollama to use local AI."
 
 
-def generate_with_ollama(prompt: str, model: str, host: str = DEFAULT_OLLAMA_HOST) -> Dict[str, str]:
+def generate_with_ollama(
+    prompt: str, model: str, host: str = DEFAULT_OLLAMA_HOST
+) -> Dict[str, str]:
     if os.getenv("VERCEL"):
         return empty_result(
             "Ollama Local AI works when LearnLite is run locally with Ollama installed. "
@@ -167,7 +181,9 @@ def generate_with_ollama(prompt: str, model: str, host: str = DEFAULT_OLLAMA_HOS
 
     model = (model or "").strip()
     if not model:
-        return empty_result("No Ollama model selected. Start Ollama and pull a model first, for example: ollama pull llama3.2:1b")
+        return empty_result(
+            "No Ollama model selected. Start Ollama and pull a model first, for example: ollama pull llama3.2:1b"
+        )
 
     payload = {
         "model": model,
@@ -178,7 +194,9 @@ def generate_with_ollama(prompt: str, model: str, host: str = DEFAULT_OLLAMA_HOS
     }
 
     try:
-        response = requests.post(f"{host.rstrip('/')}/api/generate", json=payload, timeout=90)
+        response = requests.post(
+            f"{host.rstrip('/')}/api/generate", json=payload, timeout=90
+        )
         if response.status_code != 200:
             return empty_result(f"Ollama error {response.status_code}: {response.text}")
         data = response.json()
@@ -187,7 +205,14 @@ def generate_with_ollama(prompt: str, model: str, host: str = DEFAULT_OLLAMA_HOS
         return empty_result(f"Ollama connection error: {exc}")
 
 
-def get_explanation(text: str, target_lang: str, provider: str, api_key: str = "", gemini_model: str = DEFAULT_GEMINI_MODEL, ollama_model: str = "") -> Dict[str, str]:
+def get_explanation(
+    text: str,
+    target_lang: str,
+    provider: str,
+    api_key: str = "",
+    gemini_model: str = DEFAULT_GEMINI_MODEL,
+    ollama_model: str = "",
+) -> Dict[str, str]:
     prompt = build_prompt(text, target_lang)
     provider = (provider or "gemini").lower()
 

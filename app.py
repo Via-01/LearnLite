@@ -21,7 +21,10 @@ def index():
     t = TRANSLATIONS.get(selected_lang, TRANSLATIONS["en"])
 
     provider = request.form.get("provider", "gemini")
-    gemini_model = request.form.get("gemini_model", DEFAULT_GEMINI_MODEL).strip() or DEFAULT_GEMINI_MODEL
+    gemini_model = (
+        request.form.get("gemini_model", DEFAULT_GEMINI_MODEL).strip()
+        or DEFAULT_GEMINI_MODEL
+    )
     api_key = request.form.get("api_key", "")
     user_text = request.form.get("user_text", "")
 
@@ -46,7 +49,9 @@ def index():
         if not user_text.strip():
             error = "Please enter a topic or paragraph."
         elif word_count > 700:
-            error = f"Please keep the input within 700 words. Current count: {word_count}."
+            error = (
+                f"Please keep the input within 700 words. Current count: {word_count}."
+            )
         else:
             results = get_explanation(
                 text=user_text,
