@@ -13,7 +13,7 @@ cache:
     - .cache/pip
 
 before_script:
-  - py --version
+  - python --version
   - python -m pip install --upgrade pip
 
 ruff:
