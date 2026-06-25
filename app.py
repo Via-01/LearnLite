@@ -36,7 +36,6 @@ def count_words(text: str) -> int:
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-
     selected_lang = request.form.get("lang", "en")
     t = TRANSLATIONS.get(selected_lang, TRANSLATIONS["en"])
 
