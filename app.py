@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = "uploads"
+UPLOAD_FOLDER = "/tmp/learnlite_uploads" if os.getenv("VERCEL") else "uploads"
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -36,6 +36,7 @@ def count_words(text: str) -> int:
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+
     selected_lang = request.form.get("lang", "en")
     t = TRANSLATIONS.get(selected_lang, TRANSLATIONS["en"])
 
