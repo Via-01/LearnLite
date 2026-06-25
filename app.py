@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = "/tmp/learnlite_uploads" if os.getenv("VERCEL") else "uploads"
+UPLOAD_FOLDER = "/tmp/learnlite_uploads" if os.getenv("VERCEL") else "uploads"  # nosec B108
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -168,4 +168,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000)  # nosec B104

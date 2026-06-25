@@ -313,8 +313,9 @@ def generate_rag_output(
         return parse_rag_response(raw)
 
     except requests.HTTPError as exc:
-        status = exc.response.status_code if exc.response is not None else "unknown"
-        body = exc.response.text if exc.response is not None else ""
+        response = exc.response
+        status = response.status_code if response is not None else "unknown"
+        body = response.text if response is not None else ""
         logger.error("RAG AI HTTP error %s: %s", status, body)
         return empty_rag_result(f"AI provider error {status}: {body[:200]}")
     except Exception as exc:
