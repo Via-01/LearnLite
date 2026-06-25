@@ -238,9 +238,10 @@ def generate_with_gemini(
         raw = _call_gemini_raw(prompt, api_key, model)
         return parse_response(raw)
     except requests.HTTPError as exc:
-        return empty_result(
-            f"Gemini error {exc.response.status_code}: {exc.response.text}"
-        )
+        resp = exc.response
+        status = resp.status_code if resp is not None else "unknown"
+        body = resp.text if resp is not None else ""
+        return empty_result(f"Gemini error {status}: {body}")
     except Exception as exc:
         return empty_result(f"Gemini connection error: {exc}")
 
@@ -266,9 +267,10 @@ def generate_with_ollama(
         raw = _call_ollama_raw(prompt, model, host)
         return parse_response(raw)
     except requests.HTTPError as exc:
-        return empty_result(
-            f"Ollama error {exc.response.status_code}: {exc.response.text}"
-        )
+        resp = exc.response
+        status = resp.status_code if resp is not None else "unknown"
+        body = resp.text if resp is not None else ""
+        return empty_result(f"Ollama error {status}: {body}")
     except Exception as exc:
         return empty_result(f"Ollama connection error: {exc}")
 
@@ -313,9 +315,9 @@ def generate_rag_output(
         return parse_rag_response(raw)
 
     except requests.HTTPError as exc:
-        response = exc.response
-        status = response.status_code if response is not None else "unknown"
-        body = response.text if response is not None else ""
+        resp = exc.response
+        status = resp.status_code if resp is not None else "unknown"
+        body = resp.text if resp is not None else ""
         logger.error("RAG AI HTTP error %s: %s", status, body)
         return empty_rag_result(f"AI provider error {status}: {body[:200]}")
     except Exception as exc:
