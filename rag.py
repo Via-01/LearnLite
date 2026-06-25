@@ -122,7 +122,6 @@ def get_document_answer(
             question,
         )
 
-
         prompt = build_rag_prompt(
             context=context,
             question=question,
